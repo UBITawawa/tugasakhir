@@ -1,0 +1,36 @@
+{
+  "name": "tugasakhir",
+  "version": "1.0.0",
+  "description": "Tugas Akhir Ubiquitous Computing",
+  "main": "app.js",
+  "dependencies": {
+"body-parser": "^1.15.2",
+    "ejs": "^2.5.2",
+    "express": "^4.14.0",
+    "express-session": "^1.14.1",
+    "mime": "^1.3.4",
+    "mongoose": "^4.6.1",
+    "multer": "^1.2.0",
+    "nodemon": "^1.10.2",
+    "request": "^2.75.0"
+},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UBITawawa/tugasakhir.git"
+  },
+  "keywords": [
+    "Ubiquitous",
+    "UPNP",
+    "gabut",
+    "presentation"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UBITawawa/tugasakhir/issues"
+  },
+  "homepage": "https://github.com/UBITawawa/tugasakhir#readme"
+}
