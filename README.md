@@ -1,11 +1,11 @@
 # tugasakhir
 Implementas utama API nya ada di /routes/api.js
 
-Dependencies
+#Dependencies
 Redis -> https://redis.io/topics/quickstart
 Redis digunakan untuk menyimpan state/value dari presentasi,volume,mute,dll
 
-How Turun
+#How Turun
 * clone
 * npm install
 * npm start
