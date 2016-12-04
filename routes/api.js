@@ -19,14 +19,14 @@ router.get('/setmute/:action', function(req,res){
 	var action = req.params.action;
 
 	if(action == "true"){
-		client.get(SOUND_VOLUME, function(err, value_before){
+		client.get(SOUND_MUTE, function(err, value_before){
 			client.set(SOUND_MUTE, "true");
 			res.send({"status": true, "data":{"status_now": true, "status_before": value_before}});
 		});
 		
 	}
 	else if(action == "false"){
-		client.get(SOUND_VOLUME, function(err, value_before){
+		client.get(SOUND_MUTE, function(err, value_before){
 			client.set(SOUND_MUTE, "false");
 			res.send({"status": true, "data":{"status_now": false, "status_before": value_before}});
 		});
@@ -51,12 +51,19 @@ router.get('/setvolume/:volume', function(req,res){
 });
 
 router.get('/getsound', function(req, res){
-	
+	//Next time i'll use promise to avoid callback hell
+	client.get(SOUND_VOLUME, function(err1, volume){
+		client.get(SOUND_MUTE, function(err2, mute){
+			if(err2 || err1)
+				res.send({"status": false, "data":{"message": "An non-obvious error occured"}});			
+			res.send({"status": true, "data":{"volume": volume, "mute": mute}});
+		});
+	});
 });
 
+
+
 router.get('/getboolean', function(req,res){
-	// var bool = client.get("some_key");
-	// res.send(bool);
 	client.get("some_key", function(err, reply){
 		res.send(reply);
 	});
