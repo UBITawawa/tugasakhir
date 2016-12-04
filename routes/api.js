@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var request = require('request');
+var multer = require('multer');
+var path = require('path');
 var redis = require('redis');
 var client = redis.createClient();
 
@@ -62,21 +64,50 @@ router.get('/getsound', function(req, res){
 });
 
 
+//Define config for file upload
+var storage = multer.diskStorage({
+	destination: function(req, file, cb){
+		cb(null, 'public/uploads');
+	},
+	filename: function(req, file, cb){
+   		cb(null, file.originalname);
+	}
+});
+var upload = multer({
+	storage: storage,
+	fileFilter: function(req, file, cb){
+		if (!file.originalname.match(/\.(pdf|ppt|pptx|mp4|flv)$/))
+        	return cb(new Error('Only pdf/ppt/pptx/mp4/flv files are allowed!'));
+   		cb(null, true);
+	}
+}).single('file');
 
-router.get('/getboolean', function(req,res){
-	client.get("some_key", function(err, reply){
-		res.send(reply);
+
+
+router.post('/setfilepresentasi', function(req, res){
+	upload(req, res, function(err){
+		if(err)
+			res.send({"status": false, "data":{"message": "Only pdf/ppt/pptx/mp4/flv files are allowed!"}});
+		//Save file path to redis
+		var filepath = req.file.path;
+		client.set(PRESENTATION_FILE, filepath);
+		res.send({"status": true, "data":{"message": "Success upload file", "nama_file": filepath}});
 	});
 });
 
-router.get('/settrue', function(req,res){
-	client.set("some_key","true");
-	res.send('SETTRUE');
+router.get('/getfilepresentasi', function(req, res){
+	//Ambil file path dari redis
+	client.get(PRESENTATION_FILE, function(err, filepath){
+		if(err)
+			res.send({"status": false, "data":{"message": "An non-obvious error occured"}});
+		res.send({"status": true, "data":{"file": filepath}});
+	});
 });
 
-router.get('/setfalse', function(req,res){
-	client.set("some_key","false");
-	res.send('SETFalse');
+router.get('/setaction/:action', function(req,res){
+
 });
+
+
 
 module.exports=router;
