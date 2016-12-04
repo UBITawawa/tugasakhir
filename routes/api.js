@@ -105,7 +105,27 @@ router.get('/getfilepresentasi', function(req, res){
 });
 
 router.get('/setaction/:action', function(req,res){
+	var action = req.params.action;
+	console.log(action);
+	if((action === "play" | action === "pause" | action === "stop" | action === "next" | action === "prev")){
+		client.get(PRESENTATION_FILE, function(err, nama_file){
+			client.set(PRESENTATION_ACTION, action);
+			res.send({"status": true, "data":{"nama_file": nama_file, "action": action}});
+		});
+	}
+	else{
+		res.send({"status": false, "data":{"message": "Command yang diberikan tidak sesuai"}});
+	}
+});
 
+router.get('/getaction', function(req, res){
+	client.get(PRESENTATION_FILE, function(err1, nama_file){
+		client.get(PRESENTATION_ACTION, function(err2, action){
+			if(err1 || err2)
+				res.send({"status": false, "data":{"message": "An non-obvious error occured"}});
+			res.send({"status": true, "data":{"nama_file": nama_file, "action": action}});
+		});
+	});
 });
 
 
