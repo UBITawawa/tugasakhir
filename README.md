@@ -9,7 +9,7 @@ Redis digunakan untuk menyimpan state/value dari presentasi,volume,mute,dll
 * clone
 * npm install
 * npm start
-* Open localhost:6969
+* Open localhost:6969/api/<API>
 
 
 pull b4 push
