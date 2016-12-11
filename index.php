@@ -18,9 +18,13 @@
   // WHEN USING ID_DEVICE, JUST APPEND IT
   // LIKE SOUND_VOLUME.$ID_DEVICE
 
-
-  // EXAMPLE
-  // http://[BASE_URL]:[BASE_PORT]/index.php?fungsi=set_pintu&id_device=1&jml_arg=1&arg1=buka
+  // SIMPLE TIME CONTEXT
+  $hour = date('H') + 0;
+  $minute = date('i') + 0;
+  if ($hour > 21 || $hour < 8) {
+    echo json_encode(['status' => false, 'data' => ['message' => 'Not a valid time']]);
+    die();
+  }
 
   // CHECK BASIC PARAMS
   if (!isset($_GET['fungsi']) || !isset($_GET['id_device']) || !isset($_GET['jml_arg'])) {
@@ -34,6 +38,8 @@
     'set_sound_volume' => 1,
     'set_file_presentasi' => 1
   ];
+
+  $allowed_file = [];
 
   $i = $jml_arg[_GET['fungsi']];
   while ($i > 0) {
@@ -72,7 +78,7 @@
 
       if (true) {
         $client->set(PRESENTATION_FILE.$id, $url);
-        echo json_encode(['status' => true, 'data' => ['message' => 'success', 'nama_file' => $url]]);
+        echo json_encode(['status' => true, 'data' => ['nama_file' => $url]]);
       } else {
         echo json_encode(['status' => false, 'data' => ['message' => 'An non-obvious error occured']]);
       }
@@ -126,7 +132,7 @@
       $file_path = $client->get(PRESENTATION_FILE.$id);
 
       if (true) {
-        echo json_encode(['status' => true, 'data' => ['file' => $file_path]]);
+        echo json_encode(['status' => true, 'data' => ['nama_file' => $file_path]]);
       } else {
         echo json_encode(['status' => false, 'data' => ['message' => 'An non-obvious error occured']]);
       }
