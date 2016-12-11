@@ -13,7 +13,8 @@ const PRESENTATION_ACTION = "ACTION";
 const PRESENTATION_FILE = "FILE";
 
 
-router.get('/setmute/:action', function(req,res){
+//router.get('/setmute/:action', function(req,res){
+router.get('/index.php?fungsi=setmute&arg1=:action', function(req,res){
 	/*
 		action: {true, false}
 		selain itu gak boleh dimasukkin
