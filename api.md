@@ -6,7 +6,7 @@
 
 **contoh request**
 ```
-http://localhost/index.php?fungsi=set_file_presentasi&jml_arg=1&id_device=1&arg1=http://www.axmag.com/download/pdfurl-guide.pdf
+http://localhost/?fungsi=set_file_presentasi&jml_arg=1&id_device=1&arg1=http://www.axmag.com/download/pdfurl-guide.pdf
 ```
 
 **contoh balasan**
@@ -27,7 +27,7 @@ http://localhost/index.php?fungsi=set_file_presentasi&jml_arg=1&id_device=1&arg1
 
 **contoh request**
 ```
-http://localhost/index.php?fungsi=set_action&jml_arg=1&id_device=1&arg1=play
+http://localhost/?fungsi=set_action&jml_arg=1&id_device=1&arg1=play
 ```
 
 **contoh balasan**
@@ -50,7 +50,7 @@ http://localhost/index.php?fungsi=set_action&jml_arg=1&id_device=1&arg1=play
 
 **contoh request**
 ```
-http://localhost/index.php?fungsi=set_sound_volume&jml_arg=1&id_device=1&arg1=76
+http://localhost/?fungsi=set_sound_volume&jml_arg=1&id_device=1&arg1=76
 ```
 
 **contoh balasan**
@@ -73,7 +73,7 @@ http://localhost/index.php?fungsi=set_sound_volume&jml_arg=1&id_device=1&arg1=76
 
 **contoh request**
 ```
-http://localhost/index.php?fungsi=set_mute&jml_arg=1&id_device=1&arg1=true
+http://localhost/?fungsi=set_mute&jml_arg=1&id_device=1&arg1=true
 ```
 
 **contoh balasan**
@@ -95,7 +95,7 @@ http://localhost/index.php?fungsi=set_mute&jml_arg=1&id_device=1&arg1=true
 
 **contoh request**
 ```
-http://localhost/index.php?fungsi=get_file_presentasi&jml_arg=0&id_device=1
+http://localhost/?fungsi=get_file_presentasi&jml_arg=0&id_device=1
 ```
 
 **contoh balasan**
@@ -114,7 +114,7 @@ http://localhost/index.php?fungsi=get_file_presentasi&jml_arg=0&id_device=1
 
 **contoh request**
 ```
-http://localhost/index.php?fungsi=get_action&jml_arg=0&id_device=1
+http://localhost/?fungsi=get_action&jml_arg=0&id_device=1
 ```
 
 **contoh balasan**
@@ -135,7 +135,7 @@ http://localhost/index.php?fungsi=get_action&jml_arg=0&id_device=1
 
 **contoh request**
 ```
-http://localhost/index.php?fungsi=get_sound_status&jml_arg=0&id_device=1
+http://localhost/?fungsi=get_sound_status&jml_arg=0&id_device=1
 ```
 
 **contoh balasan**
