@@ -8,7 +8,6 @@
   // $value = $client->get( 'key' );
   require('TinyRedisClient.php');
   $client = new TinyRedisClient('localhost:6379');
-  var_dump($client);
 
   // CONST
   define(SOUND_VOLUME, 'VOLUME');
@@ -22,10 +21,10 @@
   // SIMPLE TIME CONTEXT
   $hour = date('H') + 0;
   $minute = date('i') + 0;
-  if ($hour > 21 || $hour < 8) {
-    echo json_encode(['status' => false, 'data' => ['message' => 'Not a valid time']]);
-    die();
-  }
+  // if ($hour > 21 || $hour < 8) {
+  //   echo json_encode(['status' => false, 'data' => ['message' => 'Not a valid time']]);
+  //   die();
+  // }
 
   // CHECK BASIC PARAMS
   if (!isset($_GET['fungsi']) || !isset($_GET['id_device']) || !isset($_GET['jml_arg'])) {

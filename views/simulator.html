@@ -24,6 +24,25 @@
     return i;
   }
 
+  function sendRequest(method, url, callback) {
+    var request = new XMLHttpRequest();
+
+    request.open(method, url, true);
+    request.onreadystatechange = function() {
+      if (this.readyState === 4) {
+        if (this.status >= 200 && this.status < 400) {
+          console.log('< [DEBUG] response - ' + this.responseText);
+          callback(this.responseText);
+        } else {
+          console.log('< [DEBUG] error');
+        }
+      }
+    };
+
+    request.send();
+    request = null;
+  }
+
   function timer() {
     var dt = new Date();
     document.getElementById('clock').innerHTML = checkTime(dt.getHours()) + ":" + checkTime(dt.getMinutes()) + ":" + checkTime(dt.getSeconds());
@@ -42,7 +61,8 @@
         if (this.status >= 200 && this.status < 400) {
           console.log('< [DEBUG] response - ' + this.responseText);
           var res = JSON.parse(this.responseText);
-          document.getElementById('device1').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + res.data.action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";
+          var action = res.data.action == null ? 'standby' : res.data.action;
+          document.getElementById('device1').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";
         } else {
           console.log('< [DEBUG] error');
         }
@@ -60,7 +80,8 @@
         if (this.status >= 200 && this.status < 400) {
           console.log('< [DEBUG] response - ' + this.responseText);
           var res = JSON.parse(this.responseText);
-          document.getElementById('device2').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + res.data.action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";
+          var action = res.data.action == null ? 'standby' : res.data.action;
+          document.getElementById('device2').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";
         } else {
           console.log('< [DEBUG] error');
         }
@@ -79,15 +100,22 @@
           console.log('< [DEBUG] response - ' + this.responseText);
           var res = JSON.parse(this.responseText);
           console.log(res);
-          document.getElementById('device3').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + res.data.action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";
+          var action = res.data.action == null ? 'standby' : res.data.action;
+          document.getElementById('device3').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";
         } else {
           console.log('< [DEBUG] error');
         }
       }
     };
 
-    request3.send();
-    request3 = null;
+    //request3.send();
+    //request3 = null;
+
+    sendRequest('GET', '/index.php?fungsi=get_status&jml_arg=0&id_device=3', function (response) {
+      var res = JSON.parse(response);
+      var action = res.data.action == null ? 'standby' : res.data.action;
+      document.getElementById('device3').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";
+    });
 
     if (!force) {
       setTimeout("update()", 5000);
