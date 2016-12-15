@@ -1,6 +1,7 @@
 <?php
   // JSON HEADER
   header('Content-type: application/json');
+  require('Utils.php');
 
   // REDIS
   // $client = new TinyRedisClient( 'host:port' );
@@ -39,7 +40,7 @@
     'set_file_presentasi' => 1
   ];
 
-  $allowed_file = [];
+  $allowed_file = ['application/pdf', 'application/vnd.ms-powerpoint'];
 
   $i = $jml_arg[_GET['fungsi']];
   while ($i > 0) {
@@ -66,17 +67,23 @@
       $url = $_GET["arg1"];
       $header = get_headers($url, true);
 
+      // CHECK IF GIVEN URL IS PUBLIC ACCESSED
       if (strpos($header[0], '200') === false) {
         echo json_encode(['status' => false, 'data' => ['message' => 'Not a valid url']]);
         die();
       }
 
-      if (in_array($header['Content-Type'], $allowed_file)) {
-        echo json_encode(['status' => false, 'data' => ['message' => 'Not allowed file type']]);
+      // CHECK FILE TYPE
+      if (!in_array($header['Content-Type'], $allowed_file)) {
+        echo json_encode(['status' => false, 'data' => ['message' => 'Not allowed file type (' . $header['Content-Type'] . ')']]);
         die();
       }
 
       if (true) {
+        // SEND REQUEST TO JENDELA TO CLOSE THE CURTAIN
+        // sendRequest(localhost', 'setCurtainStatus', 1, [1 => 'open']);
+        // -> SEND GET REQUEST to localhost/?fungsi=setCurtainStatus&id_device=1&jml_arg=1&arg1=open
+
         $client->set(PRESENTATION_FILE.$id, $url);
         echo json_encode(['status' => true, 'data' => ['nama_file' => $url]]);
       } else {
