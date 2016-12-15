@@ -15,7 +15,11 @@ app.set('view engine', 'html');
 app.get('/', function(req,res){
 	//res.send('ubi');
   res.render('index.html');
-})
+});
+app.get('/simulator', function(req,res){
+  //res.send('ubi');
+  res.render('simulator.html');
+});
 //Implement api service di /routes/api.js
 app.use('/api',api);
 

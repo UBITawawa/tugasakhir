@@ -8,6 +8,7 @@
   // $value = $client->get( 'key' );
   require('TinyRedisClient.php');
   $client = new TinyRedisClient('localhost:6379');
+  var_dump($client);
 
   // CONST
   define(SOUND_VOLUME, 'VOLUME');
@@ -161,6 +162,22 @@
 
       if (true) {
         echo json_encode(['status' => true, 'data' => ['volume' => $volume + 0, 'mute' => $mute === 'true' ? true : false]]);
+      } else {
+        echo json_encode(['status' => false, 'data' => ['message' => 'An non-obvious error occured']]);
+      }
+      break;
+
+    // http://localhost/index.php?fungsi=get_status&jml_arg=0&id_device=1
+    case 'get_status':
+      $action = $client->get(PRESENTATION_ACTION.$id);
+      $file = $client->get(PRESENTATION_FILE.$id);
+      $volume = $client->get(SOUND_VOLUME.$id);
+      $mute = $client->get(SOUND_MUTE.$id);
+
+      // TODO CHECK SOMETHING
+
+      if (true) {
+        echo json_encode(['status' => true, 'data' => ['file' => $file, 'action' => $action, 'volume' => $volume + 0, 'mute' => $mute === 'true' ? true : false]]);
       } else {
         echo json_encode(['status' => false, 'data' => ['message' => 'An non-obvious error occured']]);
       }

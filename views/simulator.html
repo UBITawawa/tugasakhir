@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tawawa Simulator</title>
+</head>
+<body>
+  <button onclick="update(true)">Update</button>
+  <h1>Clock</h1>
+  <div id="clock"></div>
+  <hr>
+  <h1>Device #1</h1>
+  <div id="device1"></div>
+  <hr>
+  <h1>Device #2</h1>
+  <div id="device2"></div>
+  <hr>
+  <h1>Device #3</h1>
+  <div id="device3"></div>
+</body>
+</html>
+<script type="text/javascript">
+  function checkTime(i) {
+    if (i < 10) {i = "0" + i};
+    return i;
+  }
+
+  function timer() {
+    var dt = new Date();
+    document.getElementById('clock').innerHTML = checkTime(dt.getHours()) + ":" + checkTime(dt.getMinutes()) + ":" + checkTime(dt.getSeconds());
+    setTimeout("timer()", 1000);
+  }
+  timer();
+
+  function update(force = false) {
+    // can't use for loop :(
+
+    var request1 = new XMLHttpRequest();
+
+    request1.open('GET', '/index.php?fungsi=get_status&jml_arg=0&id_device=1', true);
+    request1.onreadystatechange = function() {
+      if (this.readyState === 4) {
+        if (this.status >= 200 && this.status < 400) {
+          console.log('< [DEBUG] response - ' + this.responseText);
+          var res = JSON.parse(this.responseText);
+          document.getElementById('device1').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + res.data.action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";
+        } else {
+          console.log('< [DEBUG] error');
+        }
+      }
+    };
+
+    request1.send();
+    request1 = null;
+
+    var request2 = new XMLHttpRequest();
+
+    request2.open('GET', '/index.php?fungsi=get_status&jml_arg=0&id_device=2', true);
+    request2.onreadystatechange = function() {
+      if (this.readyState === 4) {
+        if (this.status >= 200 && this.status < 400) {
+          console.log('< [DEBUG] response - ' + this.responseText);
+          var res = JSON.parse(this.responseText);
+          document.getElementById('device2').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + res.data.action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";
+        } else {
+          console.log('< [DEBUG] error');
+        }
+      }
+    };
+
+    request2.send();
+    request2 = null;
+
+    var request3 = new XMLHttpRequest();
+
+    request3.open('GET', '/index.php?fungsi=get_status&jml_arg=0&id_device=3', true);
+    request3.onreadystatechange = function() {
+      if (this.readyState === 4) {
+        if (this.status >= 200 && this.status < 400) {
+          console.log('< [DEBUG] response - ' + this.responseText);
+          var res = JSON.parse(this.responseText);
+          console.log(res);
+          document.getElementById('device3').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + res.data.action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";
+        } else {
+          console.log('< [DEBUG] error');
+        }
+      }
+    };
+
+    request3.send();
+    request3 = null;
+
+    if (!force) {
+      setTimeout("update()", 5000);
+    }
+  }
+  update();
+</script>
