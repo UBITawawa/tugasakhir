@@ -31,4 +31,15 @@
       return json_decode($response);
     }
   }
+
+  function pretty_print($content) {
+    echo '<p>';
+    if (is_object($content)) {
+      echo '[<] ';
+      echo json_encode($content, JSON_PRETTY_PRINT);
+    } else {
+      echo '[>] send get request to <a href='.$content.'>'.$content.'</a>';
+    }
+    echo '</p>';
+  }
 ?>

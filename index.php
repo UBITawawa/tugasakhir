@@ -81,7 +81,7 @@
 
       if (true) {
         // SEND REQUEST TO JENDELA TO CLOSE THE CURTAIN
-        // sendRequest(localhost', 'setCurtainStatus', 1, [1 => 'open']);
+        // sendRequest('localhost', 'setCurtainStatus', 1, [1 => 'open']);
         // -> SEND GET REQUEST to localhost/?fungsi=setCurtainStatus&id_device=1&jml_arg=1&arg1=open
 
         $client->set(PRESENTATION_FILE.$id, $url);
@@ -98,21 +98,21 @@
       if ($action === 'play' || $action === 'pause' || $action === 'stop' || $action === 'next' || $action === 'prev') {
         $nama_file = $client->get(PRESENTATION_FILE.$id);
         $client->set(PRESENTATION_ACTION.$id, $action);
-		
-		if($action === 'play'){
-			//TODO
-			//LAMP COMMAND = set_dim true, 
-			//optional(WINDOW COMMAND = setCurtainStatus close) http://[BASE_URL]:[BASE_PORT]/index.php?fungsi=setCurtainStatus&id_device=1&jml_arg=1&arg1=close
-			//ultra optional (kalau malam gk perlu setCurtainStatus)
-			//kemungkinan ditanya oleh SOUND_SYSTEM(apa perlu ketika sound system digunakan suara dari sini dipelankan)
-		}
-		
-		if($action === 'stop'){
-			//TODO
-			//LAMP COMMAND = set_dim false (nyala biasa)
-			//optional(WINDOW COMMAND = setCurtainStatus close) http://[BASE_URL]:[BASE_PORT]/index.php?fungsi=setCurtainStatus&id_device=1&jml_arg=1&arg1=open
-			//ultra optional (kalau malam gk perlu setCurtainStatus)
-		}
+
+  		if($action === 'play'){
+  			//TODO
+  			//LAMP COMMAND = set_dim true,
+  			//optional(WINDOW COMMAND = setCurtainStatus close) http://[BASE_URL]:[BASE_PORT]/index.php?fungsi=setCurtainStatus&id_device=1&jml_arg=1&arg1=close
+  			//ultra optional (kalau malam gk perlu setCurtainStatus)
+  			//kemungkinan ditanya oleh SOUND_SYSTEM(apa perlu ketika sound system digunakan suara dari sini dipelankan)
+  		}
+
+  		if($action === 'stop'){
+  			//TODO
+  			//LAMP COMMAND = set_dim false (nyala biasa)
+  			//optional(WINDOW COMMAND = setCurtainStatus close) http://[BASE_URL]:[BASE_PORT]/index.php?fungsi=setCurtainStatus&id_device=1&jml_arg=1&arg1=open
+  			//ultra optional (kalau malam gk perlu setCurtainStatus)
+  		}
 
         // TODO CHECK IF NAMA_FILE NULL
         echo json_encode(['status' => true, 'data' => ['nama_file' => $nama_file, 'action' => $action]]);
