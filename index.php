@@ -18,6 +18,11 @@
   define(MAX_DEVICE, 3);
   // WHEN USING ID_DEVICE, JUST APPEND IT
   // LIKE SOUND_VOLUME.$ID_DEVICE
+  
+  // OTHER DEVICE'S IP (kalau tidak jadi upnp)
+  // $lampu='10.10.100.203';
+  // $soundsys='10.10.100.204';
+  // $jendela='10.10.100.207';
 
   // SIMPLE TIME CONTEXT
   $hour = date('H') + 0;
