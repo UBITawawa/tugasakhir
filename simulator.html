@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tawawa Simulator</title>
+</head>
+<body>
+  <button onclick="update(true)">Update</button>
+  <h1>Clock</h1>
+  <div id="clock"></div>
+  <hr>
+  <h1>Device #1</h1>
+  <div id="device1"></div>
+  <hr>
+  <h1>Device #2</h1>
+  <div id="device2"></div>
+  <hr>
+  <h1>Device #3</h1>
+  <div id="device3"></div>
+</body>
+</html>
+<script type="text/javascript">
+  function checkTime(i) {
+    if (i < 10) {i = "0" + i};
+    return i;
+  }
+
+  function sendRequest(method, url, callback) {
+    var request = new XMLHttpRequest();
+
+    request.open(method, url, true);
+    request.onreadystatechange = function() {
+      if (this.readyState === 4) {
+        if (this.status >= 200 && this.status < 400) {
+          console.log('< [DEBUG] response - ' + this.responseText);
+          callback(this.responseText);
+        } else {
+          console.log('< [DEBUG] error');
+        }
+      }
+    };
+
+    request.send();
+    request = null;
+  }
+
+  function timer() {
+    var dt = new Date();
+    document.getElementById('clock').innerHTML = checkTime(dt.getHours()) + ":" + checkTime(dt.getMinutes()) + ":" + checkTime(dt.getSeconds());
+    setTimeout("timer()", 1000);
+  }
+  timer();
+
+  function update(force = false) {
+    // can't use for loop :(
+
+    sendRequest('GET', '/ubi/index.php?fungsi=get_status&jml_arg=0&id_device=1&force=', function (response) {
+      var res = JSON.parse(response);
+      var action = res.data.action == null ? 'standby' : res.data.action;
+      document.getElementById('device1').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";
+    });
+
+    sendRequest('GET', '/ubi/index.php?fungsi=get_status&jml_arg=0&id_device=2&force=', function (response) {
+      var res = JSON.parse(response);
+      var action = res.data.action == null ? 'standby' : res.data.action;
+      document.getElementById('device2').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";
+    });
+
+    sendRequest('GET', '/ubi/index.php?fungsi=get_status&jml_arg=0&id_device=3&force=', function (response) {
+      var res = JSON.parse(response);
+      var action = res.data.action == null ? 'standby' : res.data.action;
+      document.getElementById('device3').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";
+    });
+
+    if (!force) {
+      setTimeout("update()", 5000);
+    }
+  }
+  update();
+</script>
