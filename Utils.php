@@ -13,6 +13,7 @@
       foreach ($id_device as $id) {
         $_ = $serverUrl . '&id_device=' . $id;
         $curl = curl_init($_);
+        curl_setopt($curl, CURLOPT_TIMEOUT_MS, 1000);
         curl_setopt($curl, CURLOPT_HEADER, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
@@ -24,6 +25,7 @@
     } else {
       $serverUrl .= '&id_device=' . $id_device;
       $curl = curl_init($serverUrl);
+      curl_setopt($curl, CURLOPT_TIMEOUT_MS, 1000);
       curl_setopt($curl, CURLOPT_HEADER, false);
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 

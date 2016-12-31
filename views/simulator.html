@@ -53,19 +53,19 @@
   function update(force = false) {
     // can't use for loop :(
 
-    sendRequest('GET', '/ubi/index.php?fungsi=get_status&jml_arg=0&id_device=1', function (response) {
+    sendRequest('GET', '/ubi/index.php?fungsi=get_status&jml_arg=0&id_device=1&force=', function (response) {
       var res = JSON.parse(response);
       var action = res.data.action == null ? 'standby' : res.data.action;
       document.getElementById('device1').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";
     });
 
-    sendRequest('GET', '/ubi/index.php?fungsi=get_status&jml_arg=0&id_device=2', function (response) {
+    sendRequest('GET', '/ubi/index.php?fungsi=get_status&jml_arg=0&id_device=2&force=', function (response) {
       var res = JSON.parse(response);
       var action = res.data.action == null ? 'standby' : res.data.action;
       document.getElementById('device2').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";
     });
 
-    sendRequest('GET', '/ubi/index.php?fungsi=get_status&jml_arg=0&id_device=3', function (response) {
+    sendRequest('GET', '/ubi/index.php?fungsi=get_status&jml_arg=0&id_device=3&force=', function (response) {
       var res = JSON.parse(response);
       var action = res.data.action == null ? 'standby' : res.data.action;
       document.getElementById('device3').innerHTML = "<ul><li>File: " + res.data.file + "</li><li>Action: " + action + "</li><li>Volume: " + res.data.volume + "</li><li>Mute: " + res.data.mute + "</li></ul>";

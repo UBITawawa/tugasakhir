@@ -7,7 +7,7 @@ server.addUSN('upnp:rootdevice');
 server.addUSN('urn:schemas-upnp-org:device:Presentation:1');
 
 server.on('advertise-alive', function(){
-
+	console.log('advertising');
 });
 
 server.on('advertise-bye', function(){

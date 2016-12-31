@@ -16,22 +16,16 @@
   define(PRESENTATION_ACTION, 'ACTION');
   define(PRESENTATION_FILE, 'FILE');
   define(MAX_DEVICE, 3);
-
   // WHEN USING ID_DEVICE, JUST APPEND IT
-  // EXAMPLE SOUND_VOLUME.$ID_DEVICE
-
-  // OTHER DEVICE'S IP (kalau tidak jadi upnp)
-  define(KELOMPOK_LAMPU, '10.10.100.203');
-  define(KELOMPOK_SOUND, '10.10.100.205');
-  define(KELOMPOK_JENDELA, '10.10.100.209');
+  // LIKE SOUND_VOLUME.$ID_DEVICE
 
   // SIMPLE TIME CONTEXT
   $hour = date('H') + 0;
   $minute = date('i') + 0;
-  if (($hour > 21 || $hour < 8) && !isset($_GET['force'])) {
-    echo json_encode(['status' => false, 'data' => ['message' => 'Not a valid time']]);
-    die();
-  }
+  // if ($hour > 21 || $hour < 8) {
+  //   echo json_encode(['status' => false, 'data' => ['message' => 'Not a valid time']]);
+  //   die();
+  // }
 
   // CHECK BASIC PARAMS
   if (!isset($_GET['fungsi']) || !isset($_GET['id_device']) || !isset($_GET['jml_arg'])) {
@@ -46,7 +40,7 @@
     'set_file_presentasi' => 1
   ];
 
-  $allowed_file = ['application/pdf', 'application/vnd.ms-powerpoint', 'video/mp4'];
+  $allowed_file = ['application/pdf', 'application/vnd.ms-powerpoint'];
 
   $i = $jml_arg[_GET['fungsi']];
   while ($i > 0) {
@@ -71,37 +65,26 @@
     // http://localhost/index.php?fungsi=set_file_presentasi&jml_arg=1&id_device=1&arg1=http://www.axmag.com/download/pdfurl-guide.pdf
     case 'set_file_presentasi':
       $url = $_GET["arg1"];
-      if ($url != 'null') {
-        $header = get_headers($url, true);
+      $header = get_headers($url, true);
 
-        // CHECK IF GIVEN URL IS PUBLIC ACCESSED
-        if (strpos($header[0], '200') === false) {
-          echo json_encode(['status' => false, 'data' => ['message' => 'Not a valid url']]);
-          die();
-        }
+      // CHECK IF GIVEN URL IS PUBLIC ACCESSED
+      if (strpos($header[0], '200') === false) {
+        echo json_encode(['status' => false, 'data' => ['message' => 'Not a valid url']]);
+        die();
+      }
 
-        // CHECK FILE TYPE
-        if (!in_array($header['Content-Type'], $allowed_file)) {
-          echo json_encode(['status' => false, 'data' => ['message' => 'Not allowed file type (' . $header['Content-Type'] . ')']]);
-          die();
-        }
+      // CHECK FILE TYPE
+      if (!in_array($header['Content-Type'], $allowed_file)) {
+        echo json_encode(['status' => false, 'data' => ['message' => 'Not allowed file type (' . $header['Content-Type'] . ')']]);
+        die();
       }
 
       if (true) {
-        $response = sendRequest(KELOMPOK_JENDELA, 'getLux', 1, []);
-        if (!is_null($response)) {
-          if ($response->data->current_lux + 0 > 10000) {
-            sendRequest(KELOMPOK_JENDELA, 'setCurtainStatus', 1, [1 => 'close']);
-            sendRequest(KELOMPOK_LAMPU, 'set_lampu', 1, [1 => 'mati']);
-
-          } else if ($response->data->current_lux + 0 > 1000) {
-            sendRequest(KELOMPOK_LAMPU, 'set_lampu', 1, [1 => 'redup']);
-          }
-        }
+        // SEND REQUEST TO JENDELA TO CLOSE THE CURTAIN
+        // sendRequest('localhost', 'setCurtainStatus', 1, [1 => 'open']);
+        // -> SEND GET REQUEST to localhost/?fungsi=setCurtainStatus&id_device=1&jml_arg=1&arg1=open
 
         $client->set(PRESENTATION_FILE.$id, $url);
-        $client->set(PRESENTATION_ACTION.$id, 'stop');
-
         echo json_encode(['status' => true, 'data' => ['nama_file' => $url]]);
       } else {
         echo json_encode(['status' => false, 'data' => ['message' => 'An non-obvious error occured']]);
@@ -116,11 +99,22 @@
         $nama_file = $client->get(PRESENTATION_FILE.$id);
         $client->set(PRESENTATION_ACTION.$id, $action);
 
-    		if($action === 'stop'){
-    			sendRequest(KELOMPOK_JENDELA, 'setCurtainStatus', 1, [1 => 'open']);
-          sendRequest(KELOMPOK_LAMPU, 'set_lampu', 1, [1 => 'hidup']);
-    		}
+  		if($action === 'play'){
+  			//TODO
+  			//LAMP COMMAND = set_dim true,
+  			//optional(WINDOW COMMAND = setCurtainStatus close) http://[BASE_URL]:[BASE_PORT]/index.php?fungsi=setCurtainStatus&id_device=1&jml_arg=1&arg1=close
+  			//ultra optional (kalau malam gk perlu setCurtainStatus)
+  			//kemungkinan ditanya oleh SOUND_SYSTEM(apa perlu ketika sound system digunakan suara dari sini dipelankan)
+  		}
 
+  		if($action === 'stop'){
+  			//TODO
+  			//LAMP COMMAND = set_dim false (nyala biasa)
+  			//optional(WINDOW COMMAND = setCurtainStatus close) http://[BASE_URL]:[BASE_PORT]/index.php?fungsi=setCurtainStatus&id_device=1&jml_arg=1&arg1=open
+  			//ultra optional (kalau malam gk perlu setCurtainStatus)
+  		}
+
+        // TODO CHECK IF NAMA_FILE NULL
         echo json_encode(['status' => true, 'data' => ['nama_file' => $nama_file, 'action' => $action]]);
       } else {
         echo json_encode(['status' => false, 'data' => ['message' => 'Bad command']]);
@@ -147,6 +141,7 @@
         $before = $client->get(SOUND_MUTE.$id);
         $client->set(SOUND_MUTE.$id, $action);
 
+        // TODO CHECK IF NOT SAFE
         echo json_encode(['status' => true, 'data' => ['status_now' => $action === 'true' ? true : false, 'status_before' => $before === 'true' ? true : false]]);
       } else {
         echo json_encode(['status' => false, 'data' => ['message' => 'Bad command']]);
@@ -170,6 +165,8 @@
       $nama_file = $client->get(PRESENTATION_FILE.$id);
       $action = $client->get(PRESENTATION_ACTION.$id);
 
+      // TODO CHECK SOMETHING
+
       if (true) {
         echo json_encode(['status' => true, 'data' => ['nama_file' => $nama_file, 'action' => $action]]);
       } else {
@@ -181,6 +178,8 @@
     case 'get_sound_status':
       $volume = $client->get(SOUND_VOLUME.$id);
       $mute = $client->get(SOUND_MUTE.$id);
+
+      // TODO CHECK SOMETHING
 
       if (true) {
         echo json_encode(['status' => true, 'data' => ['volume' => $volume + 0, 'mute' => $mute === 'true' ? true : false]]);
@@ -195,6 +194,8 @@
       $file = $client->get(PRESENTATION_FILE.$id);
       $volume = $client->get(SOUND_VOLUME.$id);
       $mute = $client->get(SOUND_MUTE.$id);
+
+      // TODO CHECK SOMETHING
 
       if (true) {
         echo json_encode(['status' => true, 'data' => ['file' => $file, 'action' => $action, 'volume' => $volume + 0, 'mute' => $mute === 'true' ? true : false]]);

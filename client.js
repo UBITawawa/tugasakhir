@@ -20,6 +20,7 @@ client.on('response', function (headers, code, rinfo) {
 	var statusCode = code;
 
   	redis.hmset(identifier, 'location', location, 'statusCode', statusCode);
+	console.log('found service: ' + identifier + ' in location: ' + location + ' and status code: ' + statusCode);
 })
 
 
