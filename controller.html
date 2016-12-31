@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style type="text/css">
+    body, html {
+      height: 100%;
+    }
+    #area {
+      background: silver;
+      height: 100%;
+      text-align: center;
+      font: 30px/300px Helvetica, Arial, sans-serif;
+    }
+  </style>
+  <title>UBI CONTROLLER | TawawaOnUBI</title>
+</head>
+<body>
+  <script src="https://hammerjs.github.io/dist/hammer.js"></script>
+  <div id="area"></div>
+</body>
+</html>
+<script type="text/javascript">
+  var area = document.getElementById('area');
+  var hammer = new Hammer(area);
+  hammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+
+  // initiate, assume ...
+  var vol = 100;
+  var play = true;
+
+  hammer.on("swipeleft swiperight swipeup swipedown tap press", function(ev) {
+      area.textContent = ev.type +" gesture detected.";
+      var request = new XMLHttpRequest();
+
+      if (ev.type == 'swipeleft') {
+        area.textContent = area.textContent + ' Send NEXT Request.';
+        console.log('> [DEBUG] send next request');
+        request.open('GET', '/api/setaction/next', true);
+
+      } else if (ev.type == 'swiperight') {
+        area.textContent = area.textContent + ' Send PREV Request.';
+        console.log('> [DEBUG] send prev request');
+        request.open('GET', '/api/setaction/prev', true);
+
+      } else if (ev.type == 'swipeup') {
+        area.textContent = area.textContent + ' Send VOL UP Request.';
+        console.log('> [DEBUG] send volume up request');
+        request.open('GET', '/api/setvolume/' + (++vol), true);
+
+      } else if (ev.type == 'swipedown') {
+        area.textContent = area.textContent + ' Send VOL DOWN Request.';
+        console.log('> [DEBUG] send volume down request');
+        request.open('GET', '/api/setvolume/' + (--vol), true);
+
+      } else if (ev.type == 'tap') {
+        area.textContent = area.textContent + ' Send ' + (play ? 'PAUSE' : 'PLAY') + ' Request.';
+        console.log('> [DEBUG] send play request');
+        request.open('GET', '/api/setaction/' + (play ? 'pause' : 'play'), true);
+        play = !play;
+
+      } else if (ev.type == 'press') {
+        area.textContent = area.textContent + ' Send STOP Request.';
+        console.log('> [DEBUG] send stop request');
+        request.open('GET', '/api/setaction/stop', true);
+
+      }
+
+      request.onreadystatechange = function() {
+        if (this.readyState === 4) {
+          if (this.status >= 200 && this.status < 400) {
+            console.log('< [DEBUG] response - ' + this.responseText);
+          } else {
+            console.log('< [DEBUG] error');
+          }
+        }
+      };
+
+      request.send();
+      request = null;
+  });
+</script>
