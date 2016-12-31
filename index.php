@@ -112,7 +112,7 @@
     // http://localhost/index.php?fungsi=set_action&jml_arg=1&id_device=1&arg1=play
     case 'set_action':
       $action = $_GET['arg1'];
-      if ($action === 'play' || $action === 'pause' || $action === 'stop' || $action === 'next' || $action === 'prev') {
+      if ($action === 'play' || $action === 'pause' || $action === 'stop' || $action === 'next' || $action === 'prev' || $action === 'null') {
         $nama_file = $client->get(PRESENTATION_FILE.$id);
         $client->set(PRESENTATION_ACTION.$id, $action);
 
